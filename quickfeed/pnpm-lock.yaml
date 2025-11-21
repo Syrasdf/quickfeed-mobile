@@ -57,6 +57,9 @@ importers:
       jwt:
         specifier: ^0.2.0
         version: 0.2.0
+      postcss-pxtorem:
+        specifier: ^6.1.0
+        version: 6.1.0(postcss@5.2.18)
       vite:
         specifier: ^6.3.5
         version: 6.4.1(@types/node@24.10.1)
@@ -1617,6 +1620,11 @@ packages:
     resolution: {integrity: sha512-Umxu+FvKMwlY6TyDzGFoSUnzW+NOfMBLyC1tAkIjgX+Z/qGspJeRjVC903D7mx7TuBpJlwti2ibXtWuA7fKMeQ==}
     peerDependencies:
       postcss: '>4 <9'
+
+  postcss-pxtorem@6.1.0:
+    resolution: {integrity: sha512-ROODSNci9ADal3zUcPHOF/K83TiCgNSPXQFSbwyPHNV8ioHIE4SaC+FPOufd8jsr5jV2uIz29v1Uqy1c4ov42g==}
+    peerDependencies:
+      postcss: ^8.0.0
 
   postcss@5.2.18:
     resolution: {integrity: sha512-zrUjRRe1bpXKsX1qAJNJjqZViErVuyEkMTRrwu4ud4sbTtIBRmtaYDrHmcGgmrbsW3MHfmtIf+vJumgQn+PrXg==}
@@ -3694,6 +3702,10 @@ snapshots:
   possible-typed-array-names@1.1.0: {}
 
   postcss-prefix-selector@1.16.1(postcss@5.2.18):
+    dependencies:
+      postcss: 5.2.18
+
+  postcss-pxtorem@6.1.0(postcss@5.2.18):
     dependencies:
       postcss: 5.2.18
 
