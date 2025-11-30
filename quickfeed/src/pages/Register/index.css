@@ -1,0 +1,155 @@
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4b4b 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.register-nav {
+  background: transparent;
+  color: #ffffff;
+}
+
+.register-nav .rv-nav-bar__title {
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.register-nav .rv-nav-bar__arrow {
+  color: #ffffff;
+  font-size: 48px;
+}
+
+.register-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 60px;
+}
+
+/* 标题区域 */
+.register-header {
+  padding: 60px 0 48px;
+  text-align: center;
+}
+
+.register-header h1 {
+  font-size: 54px;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0 0 18px 0;
+}
+
+.register-header p {
+  font-size: 36px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* 注册表单 */
+.register-form {
+  background: #ffffff;
+  border-radius: 36px;
+  padding: 60px 48px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+}
+
+.register-form .rv-form-item {
+  margin-bottom: 42px;
+}
+
+.register-form .rv-field__body {
+  background: #f7f8fa;
+  border-radius: 24px;
+  padding: 0 36px;
+}
+
+.register-form .rv-field__control {
+  font-size: 42px;
+}
+
+.register-form input {
+  font-size: 42px;
+  height: 132px;
+}
+
+.register-form .rv-field__left-icon {
+  margin-right: 24px;
+  font-size: 48px;
+  color: #969799;
+}
+
+/* 验证码按钮 */
+.code-btn {
+  height: 84px !important;
+  padding: 0 30px !important;
+  font-size: 36px !important;
+  border-radius: 42px !important;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4b4b 100%) !important;
+  border: none !important;
+}
+
+.code-btn[disabled] {
+  background: #c8c9cc !important;
+}
+
+/* 注册按钮 */
+.form-footer {
+  padding-top: 36px;
+}
+
+.register-btn {
+  height: 132px;
+  font-size: 48px;
+  font-weight: 600;
+  border-radius: 66px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4b4b 100%);
+  border: none;
+}
+
+.register-btn[disabled] {
+  background: #c8c9cc;
+  opacity: 0.6;
+}
+
+/* 用户协议 */
+.agreement {
+  margin-top: 42px;
+  padding: 0 12px;
+}
+
+.agreement-checkbox {
+  font-size: 36px;
+}
+
+.agreement-checkbox .rv-checkbox__icon {
+  font-size: 48px;
+}
+
+.agreement-text {
+  font-size: 36px;
+  color: #969799;
+  margin-left: 18px;
+}
+
+.agreement-text a {
+  color: #ff4b4b;
+  text-decoration: none;
+}
+
+/* 底部链接 */
+.register-footer {
+  text-align: center;
+  margin-top: 48px;
+  font-size: 36px;
+  color: #969799;
+}
+
+.register-footer a {
+  color: #ff4b4b;
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 12px;
+  cursor: pointer;
+}

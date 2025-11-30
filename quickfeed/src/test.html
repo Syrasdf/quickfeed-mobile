@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试 react-vant 导入</title>
+</head>
+<body>
+    <h1>检查 react-vant 组件导出</h1>
+    <script type="module">
+        // 测试导入
+        import * as ReactVant from '/node_modules/.pnpm/react-vant@3.3.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-vant/dist/index.js';
+        console.log('react-vant exports:', Object.keys(ReactVant));
+        
+        // 检查我们使用的组件
+        const componentsWeUse = [
+            'Tabbar', 'NavBar', 'Form', 'Input', 'Button', 
+            'Checkbox', 'TextArea', 'ImageUploader', 'Cell', 
+            'Dialog', 'Search'
+        ];
+        
+        componentsWeUse.forEach(comp => {
+            console.log(`${comp}:`, ReactVant[comp] ? '✅ 存在' : '❌ 不存在');
+        });
+    </script>
+</body>
+</html>

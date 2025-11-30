@@ -1,12 +1,125 @@
 .profile-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f5f5f5;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+.profile-nav {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4b4b 100%);
+}
+
+.profile-nav .rv-nav-bar__title {
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: 600;
 }
 
 .profile-content {
+  padding: 30px;
+}
+
+/* 用户信息卡片 */
+.user-card {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4b4b 100%);
+  border-radius: 36px;
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  margin-bottom: 48px;
+  box-shadow: 0 12px 36px rgba(255, 75, 75, 0.2);
+}
+
+.user-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 90px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar svg {
+  color: #ff4b4b;
+}
+
+.user-info {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px;
+  color: #ffffff;
+}
+
+.user-nickname {
+  font-size: 48px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.user-bio {
+  font-size: 36px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* 功能列表 */
+.profile-section {
+  margin-bottom: 48px;
+}
+
+.profile-section .rv-cell {
+  padding: 42px 36px;
+}
+
+.profile-section .rv-cell__title {
+  font-size: 42px;
+}
+
+.profile-section .rv-cell__left-icon {
+  margin-right: 24px;
+  font-size: 48px;
+  color: #ff4b4b;
+}
+
+.profile-section .rv-cell__right-icon {
+  font-size: 42px;
+  color: #969799;
+}
+
+/* 退出登录 */
+.logout-section {
+  padding: 48px 0;
+}
+
+.logout-btn {
+  height: 132px;
+  font-size: 48px;
+  font-weight: 600;
+  border-radius: 66px;
+  background: #ffffff;
+  border: 3px solid #ee0a24;
+  color: #ee0a24;
+}
+
+.logout-btn svg {
+  margin-right: 12px;
+  font-size: 48px;
+}
+
+/* 测试信息 */
+.test-info {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.test-info p {
+  font-size: 36px;
+  color: #969799;
+  margin: 12px 0;
 }

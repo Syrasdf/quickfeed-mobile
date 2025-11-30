@@ -1,11 +1,12 @@
 import { Tabbar } from 'react-vant'
-import { HomeO, Fire, ChatO, UserO } from '@react-vant/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
+import useUserStore from '../../store/userStore'
 import './index.css'
 
 const TabBarComponent = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { isLogin } = useUserStore()
 
   const getActiveKey = () => {
     const path = location.pathname
@@ -17,6 +18,28 @@ const TabBarComponent = () => {
   }
 
   const handleChange = (key) => {
+    // 需要登录的页面
+    const authRequiredPages = ['publish', 'profile']
+    
+    if (authRequiredPages.includes(key) && !isLogin) {
+      // 未登录时跳转到登录页
+      navigate('/login', { 
+        state: { 
+          from: key === 'publish' ? '/publish' : '/profile',
+          message: '请先登录' 
+        } 
+      })
+      return
+    }
+    
+    if (key === 'publish') {
+      // 处理发布按钮点击
+      console.log('发布按钮被点击')
+      // TODO: 导航到发布页面
+      navigate('/publish')
+      return
+    }
+    
     navigate(`/${key === 'feed' ? '' : key}`)
   }
 
@@ -28,17 +51,27 @@ const TabBarComponent = () => {
       placeholder
       safeAreaInsetBottom
     >
-      <Tabbar.Item name="feed" icon={<HomeO />}>
+      <Tabbar.Item name="feed">
         首页
       </Tabbar.Item>
-      <Tabbar.Item name="discover" icon={<Fire />}>
-        发现
+      <Tabbar.Item name="discover">
+        朋友
       </Tabbar.Item>
-      <Tabbar.Item name="message" icon={<ChatO />}>
+      <Tabbar.Item 
+        name="publish" 
+        icon={
+          <div className="publish-btn">
+            <span style={{fontSize: 24}}>+</span>
+          </div>
+        }
+      >
+        {/* 发布按钮不显示文字 */}
+      </Tabbar.Item>
+      <Tabbar.Item name="message">
         消息
       </Tabbar.Item>
-      <Tabbar.Item name="profile" icon={<UserO />}>
-        我的
+      <Tabbar.Item name="profile">
+        我
       </Tabbar.Item>
     </Tabbar>
   )

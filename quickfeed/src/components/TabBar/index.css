@@ -2,3 +2,49 @@
   background: #fff;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
+
+/* 发布按钮样式 */
+.publish-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 108px;
+  background: #ffffff;
+  border: 6px solid #e0e0e0;
+  border-radius: 60px;
+  position: relative;
+  top: -12px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* 发布按钮的图标颜色 */
+.publish-btn svg {
+  color: #666666;
+  font-size: 72px !important;
+}
+
+/* 点击时的效果 */
+.rv-tabbar-item:nth-child(3) .rv-tabbar-item__icon--active .publish-btn {
+  border-color: #ff4b4b;
+}
+
+.rv-tabbar-item:nth-child(3) .rv-tabbar-item__icon--active .publish-btn svg {
+  color: #ff4b4b;
+}
+
+/* 隐藏发布按钮的文字 */
+.rv-tabbar-item:nth-child(3) .rv-tabbar-item__text {
+  display: none;
+}
+
+/* 调整其他TabBar项目的字体大小 */
+.rv-tabbar-item__text {
+  font-size: 30px !important;
+  margin-top: 6px;
+}
+
+/* 调整TabBar图标大小 */
+.rv-tabbar-item__icon svg {
+  font-size: 60px !important;
+}

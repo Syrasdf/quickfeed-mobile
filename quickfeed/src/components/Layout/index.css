@@ -1,0 +1,12 @@
+.layout-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f7f8fa;
+}
+
+.layout-content {
+  flex: 1;
+  padding-bottom: 150px; /* 为TabBar预留空间 */
+  overflow-y: auto;
+}
