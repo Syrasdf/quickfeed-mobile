@@ -11,6 +11,7 @@ import Discover from './pages/Discover'
 import Message from './pages/Message'
 import Profile from './pages/Profile'
 import Publish from './pages/Publish'
+import Detail from './pages/Detail'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/feed" element={<Navigate to="/" replace />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/message" element={<Message />} />
+            <Route path="/detail/:id" element={<Detail />} />
             
             {/* 需要登录的页面 */}
             <Route path="/profile" element={

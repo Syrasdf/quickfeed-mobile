@@ -1,0 +1,278 @@
+.detail-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 120px; /* 为底部操作栏留空间 */
+}
+
+.detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 200px;
+}
+
+.nav-right {
+  display: flex;
+  gap: 32px;
+  font-size: 32px;
+  color: #333;
+}
+
+.nav-right span {
+  cursor: pointer;
+}
+
+.detail-container {
+  background: #fff;
+}
+
+/* 作者信息区域 */
+.author-section {
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.author-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.author-name {
+  font-size: 32px;
+  font-weight: 500;
+  color: #333;
+}
+
+.post-time {
+  font-size: 28px;
+  color: #999;
+}
+
+/* 内容区域 */
+.content-section {
+  padding: 32px;
+}
+
+.post-content {
+  font-size: 32px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 32px;
+  word-break: break-word;
+}
+
+/* 图片网格 */
+.image-grid {
+  margin-bottom: 32px;
+}
+
+.image-item {
+  display: inline-block;
+  margin: 8px;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.image-item:active {
+  transform: scale(0.95);
+}
+
+/* 单张图片 */
+.image-count-1 .image-item {
+  width: calc(100% - 16px);
+  height: 500px;
+}
+
+/* 两张图片 */
+.image-count-2 .image-item {
+  width: calc(50% - 16px);
+  height: 300px;
+}
+
+/* 三张或更多图片 */
+.image-count-3 .image-item,
+.image-count-4 .image-item,
+.image-count-5 .image-item,
+.image-count-6 .image-item,
+.image-count-7 .image-item,
+.image-count-8 .image-item,
+.image-count-9 .image-item {
+  width: calc(33.33% - 16px);
+  height: 220px;
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 标签区域 */
+.tag-section {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.post-tag {
+  font-size: 28px;
+  padding: 12px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+/* 统计信息 */
+.stats-section {
+  padding: 24px 32px;
+  display: flex;
+  gap: 48px;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  color: #666;
+}
+
+.stat-icon {
+  font-size: 36px;
+}
+
+.stat-count {
+  color: #333;
+}
+
+/* 相关推荐 */
+.recommend-section {
+  padding: 32px;
+  background: #fff;
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.recommend-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.recommend-item {
+  padding: 16px 32px;
+  background: #f8f8f8;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.recommend-item:active {
+  background: #e8e8e8;
+}
+
+.recommend-tag {
+  font-size: 30px;
+  color: #ff4b4b;
+}
+
+/* 底部操作栏 */
+.detail-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #eee;
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  z-index: 100;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.comment-input {
+  width: 100%;
+  height: 72px;
+  padding: 0 24px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 36px;
+  font-size: 30px;
+  outline: none;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 32px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.action-btn:active {
+  color: #ff4b4b;
+}
+
+.action-btn span:first-child {
+  font-size: 44px;
+}
+
+/* 图片预览 */
+.image-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+}
