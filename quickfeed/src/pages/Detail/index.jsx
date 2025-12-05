@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { NavBar, Image, Tag, Loading, Empty, Button, ShareSheet, Dialog } from 'react-vant'
-import { getPostDetail } from '../../api/post'
+import { NavBar, Image, Tag, Loading, Empty, Button, ShareSheet, Dialog, Toast } from 'react-vant'
+import { getPostDetail, likePost, getLikeStatus, collectPost, getCollectStatus } from '../../api/post'
+import Comment from '../../components/Comment'
 import './index.css'
 
 const Detail = () => {
@@ -12,6 +13,11 @@ const Detail = () => {
   const [shareVisible, setShareVisible] = useState(false)
   const [imagePreview, setImagePreview] = useState(false)
   const [previewIndex, setPreviewIndex] = useState(0)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isCollected, setIsCollected] = useState(false)
+  const [likes, setLikes] = useState(0)
+  const [commentVisible, setCommentVisible] = useState(false)
+  const [commentCount, setCommentCount] = useState(0)
 
   // 加载文章详情
   useEffect(() => {
@@ -23,6 +29,10 @@ const Detail = () => {
       setLoading(true)
       const data = await getPostDetail(id)
       setPost(data)
+      setIsLiked(getLikeStatus(id))
+      setIsCollected(getCollectStatus(id))
+      setLikes(data.likes || 0)
+      setCommentCount(data.comments || 0)
     } catch (error) {
       console.error('加载失败:', error)
     } finally {
@@ -72,14 +82,68 @@ const Detail = () => {
 
   // 处理分享
   const handleShare = (option) => {
-    console.log('分享到:', option.name)
     setShareVisible(false)
+    
+    // 模拟分享功能
+    if (option.name === '复制链接') {
+      // 复制链接到剪贴板
+      const url = window.location.href
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          Toast.success('链接已复制')
+        }).catch(() => {
+          Toast.fail('复制失败')
+        })
+      } else {
+        // 备用方案
+        const input = document.createElement('input')
+        input.value = url
+        document.body.appendChild(input)
+        input.select()
+        document.execCommand('copy')
+        document.body.removeChild(input)
+        Toast.success('链接已复制')
+      }
+    } else {
+      // 其他分享方式（模拟）
+      Toast.show(`已打开${option.name}分享`)
+      // 实际项目中可以调用对应的SDK或者使用Web Share API
+      // if (navigator.share) {
+      //   navigator.share({
+      //     title: '分享文章',
+      //     text: post.content,
+      //     url: window.location.href
+      //   })
+      // }
+    }
   }
 
   // 预览图片
   const handleImageClick = (index) => {
     setPreviewIndex(index)
     setImagePreview(true)
+  }
+
+  // 处理点赞
+  const handleLike = async () => {
+    try {
+      const result = await likePost(id)
+      setIsLiked(result.isLiked)
+      setLikes(result.likes)
+    } catch (error) {
+      Toast.fail('点赞失败')
+    }
+  }
+
+  // 处理收藏
+  const handleCollect = async () => {
+    try {
+      const result = await collectPost(id)
+      setIsCollected(result.isCollected)
+      Toast.success(result.isCollected ? '收藏成功' : '取消收藏')
+    } catch (error) {
+      Toast.fail('操作失败')
+    }
   }
 
   if (loading) {
@@ -233,17 +297,29 @@ const Detail = () => {
             type="text" 
             placeholder="说点什么..." 
             className="comment-input"
-            onClick={() => console.log('打开评论')}
+            onClick={() => setCommentVisible(true)}
           />
         </div>
         <div className="footer-actions">
-          <button className="action-btn">
-            <span>👍</span>
-            <span>{post.likes || 0}</span>
+          <button 
+            className={`action-btn ${isLiked ? 'liked' : ''}`}
+            onClick={handleLike}
+          >
+            <span>{isLiked ? '❤️' : '🤍'}</span>
+            <span>{likes}</span>
           </button>
-          <button className="action-btn">
+          <button 
+            className={`action-btn ${isCollected ? 'collected' : ''}`}
+            onClick={handleCollect}
+          >
+            <span>{isCollected ? '⭐' : '☆'}</span>
+          </button>
+          <button 
+            className="action-btn"
+            onClick={() => setCommentVisible(true)}
+          >
             <span>💬</span>
-            <span>{post.comments || 0}</span>
+            <span>{commentCount}</span>
           </button>
           <button className="action-btn" onClick={() => setShareVisible(true)}>
             <span>🔗</span>
@@ -272,6 +348,14 @@ const Detail = () => {
           />
         </div>
       )}
+
+      {/* 评论组件 */}
+      <Comment
+        postId={id}
+        visible={commentVisible}
+        onClose={() => setCommentVisible(false)}
+        onCommentCountUpdate={setCommentCount}
+      />
     </div>
   )
 }

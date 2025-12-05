@@ -3,10 +3,9 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .app-content {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
 }

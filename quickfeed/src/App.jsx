@@ -12,6 +12,7 @@ import Message from './pages/Message'
 import Profile from './pages/Profile'
 import Publish from './pages/Publish'
 import Detail from './pages/Detail'
+import Search from './pages/Search'
 
 function App() {
   return (
@@ -27,18 +28,15 @@ function App() {
             <Route path="/" element={<Feed />} />
             <Route path="/feed" element={<Navigate to="/" replace />} />
             <Route path="/discover" element={<Discover />} />
-            <Route path="/message" element={<Message />} />
             <Route path="/detail/:id" element={<Detail />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/publish" element={<Publish />} />
             
-            {/* 需要登录的页面 */}
-            <Route path="/profile" element={
+            {/* 需要登录的页面 - 只有消息页面 */}
+            <Route path="/message" element={
               <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/publish" element={
-              <ProtectedRoute>
-                <Publish />
+                <Message />
               </ProtectedRoute>
             } />
           </Route>

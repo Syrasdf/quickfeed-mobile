@@ -1,10 +1,12 @@
- .feed-page {
-   min-height: 100vh;
-   display: flex;
-   flex-direction: column;
-   background: #f7f8fa;
- }
+/* Feed 页面样式 */
+.feed-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f7f8fa;
+}
 
+/* 顶部搜索栏 */
 .feed-header {
   display: flex;
   align-items: center;
@@ -19,15 +21,15 @@
 .header-content {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   width: 100%;
-  max-width: 960px;
-  padding: 0 20px;
+  max-width: 600px;
 }
 
+/* 搜索框 */
 .header-search {
   flex: 1;
-  min-width: 0;
+  cursor: pointer;
 }
 
 .header-search .rv-search {
@@ -37,33 +39,39 @@
 
 .header-search .rv-search__content {
   background: #ffffff;
-  height: 120px;
-  padding: 0 48px;
-  border-radius: 60px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  font-size: 14px !important;
 }
 
 .header-search .rv-search__content--round {
-  border-radius: 60px;
+  border-radius: 18px;
 }
 
 .header-search input {
-  font-size: 45px;
+  font-size: 14px;
 }
 
-.ai-btn-large {
+.header-search:active {
+  transform: scale(0.98);
+}
+
+/* AI 按钮 */
+.ai-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 120px;
-  min-width: 120px;
-  border-radius: 60px;
+  width: 40px;
+  height: 36px;
+  min-width: 40px;
+  border-radius: 18px;
   border: none;
   outline: none;
   background: #ffffff;
   color: #ff4b4b;
-  font-size: 48px;
+  font-size: 16px;
   font-weight: 800;
   white-space: nowrap;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -71,113 +79,21 @@
   transition: all 0.3s ease;
 }
 
-.ai-btn-large:active {
+.ai-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ai-btn:active {
   transform: scale(0.95);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-
+/* 内容区域 */
 .feed-content {
   flex: 1;
-  padding: 30px;
+  padding: 0;
   background: #f7f8fa;
   overflow-y: auto;
-}
-
-.waterfall-container {
-  display: flex;
-  gap: 10px;
-}
-
-.waterfall-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.left-column,
-.right-column {
-  min-height: 200px;
-}
-
-/* 加载状态 */
-.feed-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 100px 0;
-}
-
-/* 文章卡片 */
-.feed-card {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.feed-card:active {
-  transform: scale(0.98);
-}
-
-.card-image {
-  width: 100%;
-  height: auto;
-  min-height: 200px;
-  max-height: 400px;
-  overflow: hidden;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 24px;
-}
-
-.card-text {
-  font-size: 28px;
-  color: #333;
-  line-height: 1.6;
-  overflow: hidden;
-  display: -webkit-box;
-  line-clamp: 3;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  margin-bottom: 16px;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-author {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.author-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.author-name {
-  font-size: 24px;
-  color: #666;
-}
-
-.card-stats {
-  font-size: 24px;
-  color: #999;
+  -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
 }

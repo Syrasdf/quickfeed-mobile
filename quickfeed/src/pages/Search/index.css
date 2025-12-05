@@ -1,0 +1,127 @@
+.search-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.search-header {
+  background: #fff;
+  padding: 24px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 推荐内容 */
+.search-recommend {
+  padding: 32px;
+}
+
+.search-section {
+  margin-bottom: 48px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h3 {
+  font-size: 38px;
+  font-weight: 500;
+  color: #333;
+}
+
+.clear-btn {
+  font-size: 32px;
+  color: #999;
+  cursor: pointer;
+}
+
+.clear-btn:active {
+  opacity: 0.7;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tag-list .rv-tag {
+  font-size: 34px;
+  padding: 16px 28px;
+  margin: 8px;
+  border-radius: 36px;
+}
+
+.hot-icon {
+  margin-right: 4px;
+}
+
+/* 搜索结果 */
+.search-results {
+  padding: 32px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.results-count {
+  padding: 24px;
+  font-size: 32px;
+  color: #999;
+}
+
+.result-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+}
+
+.result-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+}
+
+.result-text {
+  flex: 1;
+}
+
+.result-text h4 {
+  font-size: 38px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.result-meta {
+  display: flex;
+  gap: 24px;
+  font-size: 30px;
+  color: #999;
+}
+
+.author {
+  color: #ff4b4b;
+}
+
+.result-image {
+  flex-shrink: 0;
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 空状态 */
+.search-results .rv-empty {
+  padding: 100px 0;
+}

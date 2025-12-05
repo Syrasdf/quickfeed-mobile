@@ -18,28 +18,25 @@ const TabBarComponent = () => {
   }
 
   const handleChange = (key) => {
-    // 需要登录的页面
-    const authRequiredPages = ['publish', 'profile']
-    
-    if (authRequiredPages.includes(key) && !isLogin) {
+    // 只有消息页面需要登录
+    if (key === 'message' && !isLogin) {
       // 未登录时跳转到登录页
       navigate('/login', { 
         state: { 
-          from: key === 'publish' ? '/publish' : '/profile',
-          message: '请先登录' 
+          from: '/message',
+          message: '请先登录查看消息' 
         } 
       })
       return
     }
     
     if (key === 'publish') {
-      // 处理发布按钮点击
-      console.log('发布按钮被点击')
-      // TODO: 导航到发布页面
+      // 处理发布按钮点击，直接导航到发布页面
       navigate('/publish')
       return
     }
     
+    // 其他页面直接导航
     navigate(`/${key === 'feed' ? '' : key}`)
   }
 

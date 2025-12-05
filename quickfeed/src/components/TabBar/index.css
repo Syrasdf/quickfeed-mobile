@@ -40,11 +40,11 @@
 
 /* 调整其他TabBar项目的字体大小 */
 .rv-tabbar-item__text {
-  font-size: 30px !important;
+  font-size: 42px !important;
   margin-top: 6px;
 }
 
 /* 调整TabBar图标大小 */
 .rv-tabbar-item__icon svg {
-  font-size: 60px !important;
+  font-size: 72px !important;
 }
