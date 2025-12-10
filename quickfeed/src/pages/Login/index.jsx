@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
-import { Form, Input, Button, NavBar, Checkbox, Tabs, Toast } from 'react-vant'
+import { Form, Input, Button, NavBar, Checkbox, Tabs } from 'react-vant'
+import Toast from '../../utils/toast'
 import useUserStore from '../../store/userStore'
 import { login } from '../../api/auth'
 import storage from '../../utils/storage'
@@ -68,7 +69,7 @@ const Login = () => {
       if (loginType === 'phone') {
         // 模拟验证：验证码必须是 123456
         if (values.code !== '123456') {
-          Toast.fail('验证码错误，请输入：123456')
+          Toast({ message: '验证码错误，请输入：123456', icon: 'fail' })
           throw new Error('验证码错误')
         }
         // 模拟手机号登录成功
@@ -89,7 +90,7 @@ const Login = () => {
       // 保存用户信息
       setLogin(res.token, res.userInfo)
       
-      Toast.success('登录成功')
+      Toast({ message: '登录成功', icon: 'success' })
       
       // 跳转到之前的页面或首页
       const from = location.state?.from || '/'
@@ -114,19 +115,19 @@ const Login = () => {
     try {
       const phone = phoneForm.getFieldValue('phone')
       if (!phone) {
-        Toast.fail('请输入手机号')
+        Toast({ message: '请输入手机号', icon: 'fail' })
         return
       }
       
       // 验证手机号格式
       if (!/^1[3-9]\d{9}$/.test(phone)) {
-        Toast.fail('请输入正确的手机号')
+        Toast({ message: '请输入正确的手机号', icon: 'fail' })
         return
       }
       
       // 模拟发送验证码
       const testCode = '123456' // 测试验证码
-      Toast.show({
+      Toast({
         message: `验证码已发送到 ${phone}\n测试验证码：${testCode}`,
         duration: 5000,
         position: 'top',
@@ -140,7 +141,7 @@ const Login = () => {
       
       console.log(`手机号 ${phone} 的测试验证码是: ${testCode}`)
     } catch (error) {
-      Toast.fail('发送失败，请重试')
+      Toast({ message: '发送失败，请重试', icon: 'fail' })
     }
   }
   
@@ -150,7 +151,7 @@ const Login = () => {
       username: 'admin',
       password: '123456'
     })
-    Toast.info('已填充测试账号')
+    Toast('已填充测试账号')
   }
   
   // 快速填充测试手机号
@@ -158,7 +159,7 @@ const Login = () => {
     phoneForm.setFieldsValue({
       phone: '13800138000'
     })
-    Toast.info('已填充测试手机号，请点击获取验证码')
+    Toast('已填充测试手机号，请点击获取验证码')
   }
 
   // 验证规则

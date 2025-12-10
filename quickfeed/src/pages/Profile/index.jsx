@@ -1,23 +1,43 @@
 import { useState, useEffect } from 'react'
-import { NavBar, Cell, Button, Dialog, Tabs, Card, Image, Empty, Loading, Toast } from 'react-vant'
-import { useNavigate } from 'react-router-dom'
+import { NavBar, Cell, Button, Dialog, Tabs, Card, Image, Empty, Loading } from 'react-vant'
+import Toast from '../../utils/toast'
+import { useNavigate, useLocation } from 'react-router-dom'
 import useUserStore from '../../store/userStore'
 import { getUserPosts, getUserCollectedPosts, getUserStats } from '../../api/post'
 import './index.css'
 
 const Profile = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { userInfo, logout } = useUserStore()
   const [activeTab, setActiveTab] = useState('posts')
   const [posts, setPosts] = useState([])
   const [collections, setCollections] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
 
-  // 加载用户数据
+  // 加载用户数据 - 每次进入页面都刷新
   useEffect(() => {
-    loadUserData()
-  }, [])
+    // 当路由是个人中心页面时，重新加载数据
+    if (location.pathname === '/profile') {
+      loadUserData()
+    }
+  }, [location.pathname])
+  
+  // 页面获得焦点时也刷新数据
+  useEffect(() => {
+    const handleFocus = () => {
+      if (document.visibilityState === 'visible' && location.pathname === '/profile') {
+        loadUserData()
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleFocus)
+    return () => {
+      document.removeEventListener('visibilitychange', handleFocus)
+    }
+  }, [location.pathname])
 
   const loadUserData = async () => {
     try {
@@ -35,7 +55,7 @@ const Profile = () => {
       setCollections(collectionsData.list)
     } catch (error) {
       console.error('加载数据失败:', error)
-      Toast.fail('加载失败')
+      Toast({ message: '加载失败', icon: 'fail' })
     } finally {
       setLoading(false)
     }
@@ -43,16 +63,13 @@ const Profile = () => {
 
   // 处理退出登录
   const handleLogout = () => {
-    Dialog.confirm({
-      title: '提示',
-      message: '确定要退出登录吗？',
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      onConfirm: () => {
-        logout()
-        navigate('/login', { replace: true })
-      }
-    })
+    setShowLogoutDialog(true)
+  }
+
+  // 确认退出
+  const confirmLogout = () => {
+    logout()
+    navigate('/login', { replace: true })
   }
 
   // 跳转到详情页
@@ -209,17 +226,17 @@ const Profile = () => {
             <Cell 
               title="个人资料"
               isLink
-              onClick={() => Toast.show('功能开发中')}
+              onClick={() => Toast('功能开发中')}
             />
             <Cell 
               title="设置"
               isLink
-              onClick={() => Toast.show('功能开发中')}
+              onClick={() => Toast('功能开发中')}
             />
             <Cell 
               title="关于我们"
               isLink
-              onClick={() => Toast.show('QuickFeed v1.0.0')}
+              onClick={() => Toast('QuickFeed v1.0.0')}
             />
           </Cell.Group>
         </div>
@@ -242,6 +259,16 @@ const Profile = () => {
           <p>测试账号：admin / 123456</p>
           <p>测试账号：test / 123456</p>
         </div>
+
+        {/* 退出登录确认对话框 */}
+        <Dialog
+          visible={showLogoutDialog}
+          title="提示"
+          message="确定要退出登录吗？"
+          showCancelButton
+          onConfirm={confirmLogout}
+          onCancel={() => setShowLogoutDialog(false)}
+        />
       </main>
     </article>
   )

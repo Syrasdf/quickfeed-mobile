@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { NavBar, Image, Tag, Loading, Empty, Button, ShareSheet, Dialog, Toast } from 'react-vant'
-import { getPostDetail, likePost, getLikeStatus, collectPost, getCollectStatus } from '../../api/post'
+import { NavBar, Image, Tag, Loading, Empty, Button, ShareSheet, Dialog } from 'react-vant'
+import Toast from '../../utils/toast'
+import { getPostDetail, likePost, getLikeStatus, collectPost, getCollectStatus, deletePost } from '../../api/post'
 import Comment from '../../components/Comment'
 import './index.css'
 
@@ -18,6 +19,7 @@ const Detail = () => {
   const [likes, setLikes] = useState(0)
   const [commentVisible, setCommentVisible] = useState(false)
   const [commentCount, setCommentCount] = useState(0)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   // 加载文章详情
   useEffect(() => {
@@ -61,15 +63,35 @@ const Detail = () => {
   }
 
   // 处理删除
-  const handleDelete = async () => {
-    await Dialog.confirm({
-      title: '确认删除',
-      message: '删除后无法恢复，确定要删除吗？'
-    })
-    
-    // TODO: 调用删除接口
-    console.log('删除文章:', id)
-    navigate('/', { replace: true })
+  const handleDelete = () => {
+    setShowDeleteDialog(true)
+  }
+
+  // 确认删除
+  const confirmDelete = async () => {
+    try {
+      Toast.loading({
+        message: '删除中...',
+        forbidClick: true,
+        duration: 0
+      })
+      
+      // 调用删除接口
+      await deletePost(id)
+      
+      Toast.clear()
+      Toast({ message: '删除成功', icon: 'success' })
+      
+      // 删除成功后跳转到首页
+      setTimeout(() => {
+        navigate('/', { replace: true })
+      }, 500)
+    } catch (error) {
+      Toast.clear()
+      Toast({ message: '删除失败', icon: 'fail' })
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   // 分享选项
@@ -90,9 +112,9 @@ const Detail = () => {
       const url = window.location.href
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => {
-          Toast.success('链接已复制')
+          Toast({ message: '链接已复制', icon: 'success' })
         }).catch(() => {
-          Toast.fail('复制失败')
+          Toast({ message: '复制失败', icon: 'fail' })
         })
       } else {
         // 备用方案
@@ -102,11 +124,11 @@ const Detail = () => {
         input.select()
         document.execCommand('copy')
         document.body.removeChild(input)
-        Toast.success('链接已复制')
+        Toast({ message: '链接已复制', icon: 'success' })
       }
     } else {
       // 其他分享方式（模拟）
-      Toast.show(`已打开${option.name}分享`)
+      Toast(`已打开${option.name}分享`)
       // 实际项目中可以调用对应的SDK或者使用Web Share API
       // if (navigator.share) {
       //   navigator.share({
@@ -125,14 +147,39 @@ const Detail = () => {
   }
 
   // 处理点赞
-  const handleLike = async () => {
-    try {
-      const result = await likePost(id)
+  const handleLike = () => {
+    console.log('点击点赞，当前ID:', id, '当前状态:', isLiked, '当前点赞数:', likes)
+    
+    // 立即更新UI（乐观更新）
+    const newIsLiked = !isLiked
+    const newLikes = newIsLiked ? likes + 1 : Math.max(0, likes - 1)
+    
+    setIsLiked(newIsLiked)
+    setLikes(newLikes)
+    
+    // 更新post对象
+    if (post) {
+      setPost({...post, likes: newLikes})
+    }
+    
+    // 异步调用API
+    likePost(id).then(result => {
+      console.log('点赞API返回:', result)
       setIsLiked(result.isLiked)
       setLikes(result.likes)
-    } catch (error) {
-      Toast.fail('点赞失败')
-    }
+      if (post) {
+        setPost({...post, likes: result.likes})
+      }
+    }).catch(error => {
+      console.error('点赞失败:', error)
+      // 回滚状态
+      setIsLiked(isLiked)
+      setLikes(likes)
+      if (post) {
+        setPost({...post, likes: likes})
+      }
+      Toast({ message: '点赞失败', icon: 'fail' })
+    })
   }
 
   // 处理收藏
@@ -140,9 +187,9 @@ const Detail = () => {
     try {
       const result = await collectPost(id)
       setIsCollected(result.isCollected)
-      Toast.success(result.isCollected ? '收藏成功' : '取消收藏')
+      Toast({ message: result.isCollected ? '收藏成功' : '取消收藏', icon: 'success' })
     } catch (error) {
-      Toast.fail('操作失败')
+      Toast({ message: '操作失败', icon: 'fail' })
     }
   }
 
@@ -263,14 +310,36 @@ const Detail = () => {
             <span className="stat-icon">👁️</span>
             <span className="stat-count">{post.views || 0}</span>
           </div>
-          <div className="stat-item">
-            <span className="stat-icon">👍</span>
-            <span className="stat-count">{post.likes || 0}</span>
+          <div 
+            className={`stat-item clickable ${isLiked ? 'liked' : ''}`}
+            onClick={handleLike}
+          >
+            <span className="stat-icon">{isLiked ? '❤️' : '👍'}</span>
+            <span className="stat-count">{likes}</span>
           </div>
-          <div className="stat-item">
+          <div 
+            className="stat-item clickable"
+            onClick={() => setCommentVisible(true)}
+          >
             <span className="stat-icon">💬</span>
-            <span className="stat-count">{post.comments || 0}</span>
+            <span className="stat-count">{commentCount}</span>
           </div>
+        </div>
+
+        {/* 评论区提示 */}
+        <div className="comment-section">
+          <h3 className="section-title">
+            评论 ({commentCount})
+          </h3>
+          <Button 
+            type="primary" 
+            size="large"
+            block
+            onClick={() => setCommentVisible(true)}
+            style={{ marginBottom: '20px' }}
+          >
+            查看全部评论
+          </Button>
         </div>
 
         {/* 相关推荐 (挑战功能) */}
@@ -350,11 +419,23 @@ const Detail = () => {
       )}
 
       {/* 评论组件 */}
-      <Comment
-        postId={id}
-        visible={commentVisible}
-        onClose={() => setCommentVisible(false)}
-        onCommentCountUpdate={setCommentCount}
+      {commentVisible && (
+        <Comment 
+          postId={id}
+          visible={commentVisible}
+          onClose={() => setCommentVisible(false)}
+          onCommentCountUpdate={setCommentCount}
+        />
+      )}
+
+      {/* 删除确认对话框 */}
+      <Dialog
+        visible={showDeleteDialog}
+        title="确认删除"
+        message="删除后无法恢复，确定要删除吗？"
+        showCancelButton
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteDialog(false)}
       />
     </div>
   )

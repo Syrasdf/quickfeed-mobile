@@ -1,10 +1,30 @@
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search } from 'react-vant'
+import { Search, PullRefresh, Card, Image, Loading } from 'react-vant'
+import Toast from '../../utils/toast'
+import { getPostList, likePost, getLikeStatus } from '../../api/post'
 import SimpleWaterfall from '../../components/SimpleWaterfall'
 import './index.css'
 
 const Feed = () => {
   const navigate = useNavigate()
+  
+  // 状态管理
+  const [posts, setPosts] = useState([])
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  
+  // refs
+  const loadMoreRef = useRef(null)
+  const observerRef = useRef(null)
+  
+  // 初始化加载
+  useEffect(() => {
+    loadPosts()
+  }, [])
 
   // 设置交叉观察器以实现无限滚动
   useEffect(() => {
@@ -38,7 +58,11 @@ const Feed = () => {
         setLoading(true)
       }
       
-      const data = await getPostList({ page: isRefresh ? 1 : page, pageSize: 10 })
+      const data = await getPostList({ 
+        page: isRefresh ? 1 : page, 
+        pageSize: 10,
+        sortBy: 'time' // 按时间排序
+      })
       // 添加点赞状态
       const postsWithLikeStatus = data.list.map(post => ({
         ...post,
@@ -54,7 +78,7 @@ const Feed = () => {
       }
     } catch (error) {
       console.error('加载失败:', error)
-      Toast.fail('加载失败')
+      Toast({ message: '加载失败', icon: 'fail' })
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -68,7 +92,11 @@ const Feed = () => {
     try {
       setLoadingMore(true)
       const nextPage = page + 1
-      const data = await getPostList({ page: nextPage, pageSize: 10 })
+      const data = await getPostList({ 
+        page: nextPage, 
+        pageSize: 10,
+        sortBy: 'time' // 按时间排序
+      })
       
       // 添加点赞状态
       const postsWithLikeStatus = data.list.map(post => ({
@@ -81,7 +109,7 @@ const Feed = () => {
       setHasMore(data.list.length === 10)
     } catch (error) {
       console.error('加载更多失败:', error)
-      Toast.fail('加载失败')
+      Toast({ message: '加载失败', icon: 'fail' })
     } finally {
       setLoadingMore(false)
     }
@@ -111,7 +139,7 @@ const Feed = () => {
         )
       )
     } catch (error) {
-      Toast.fail('点赞失败')
+      Toast({ message: '点赞失败', icon: 'fail' })
     }
   }
   

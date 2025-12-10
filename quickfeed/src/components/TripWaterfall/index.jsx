@@ -1,14 +1,22 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PullRefresh } from 'react-vant';
 import { useRecommendStore } from '../../store/useRecommendStore';
 import './index.css';
 
 const TripWaterfall = () => {
   const navigate = useNavigate();
-  const { images, loading, hasMore, fetchMore, reset } = useRecommendStore();
+  // 从 store 获取数据，提供默认值
+  const storeData = useRecommendStore((state) => state) || {};
+  const images = storeData.images || [];
+  const loading = storeData.loading || false;
+  const hasMore = storeData.hasMore !== undefined ? storeData.hasMore : true;
+  const fetchMore = storeData.fetchMore || (() => {});
+  const reset = storeData.reset || (() => {});
   const [isVisible, setIsVisible] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [columns, setColumns] = useState([[], []]);
+  const [refreshing, setRefreshing] = useState(false);
   const containerRef = useRef(null);
   const loaderRef = useRef(null);
   const lazyObserverRef = useRef(null);
@@ -47,7 +55,9 @@ const TripWaterfall = () => {
   useEffect(() => {
     setIsVisible(true);
     setHasInitialized(true);
-    fetchMore();
+    if (typeof fetchMore === 'function') {
+      fetchMore();
+    }
   }, []);
 
   // 无限滚动观察器 - 滚动到底部加载更多
@@ -56,7 +66,7 @@ const TripWaterfall = () => {
 
     const scrollObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !loading && hasMore) {
+        if (entry.isIntersecting && !loading && hasMore && typeof fetchMore === 'function') {
           fetchMore();
         }
       },
@@ -83,6 +93,26 @@ const TripWaterfall = () => {
   // 跳转到详情页
   const handleCardClick = (item) => {
     navigate(`/detail/${item.id}`);
+  };
+
+  // 处理下拉刷新
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      // 重置数据并重新加载
+      if (typeof reset === 'function') {
+        await reset();
+      }
+      if (typeof fetchMore === 'function') {
+        await fetchMore();
+      }
+      // 模拟网络请求延迟，提升用户体验
+      await new Promise(resolve => setTimeout(resolve, 500));
+    } catch (error) {
+      console.error('刷新失败:', error);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   // 卡片组件
@@ -142,54 +172,63 @@ const TripWaterfall = () => {
   );
 
   return (
-    <div className="trip-recommend-section" ref={containerRef}>
-      {images.length === 0 && loading ? (
-        // 初次加载中状态
-        <div className="trip-loading-container">
-          <div className="trip-loading-spinner"></div>
-          <span className="trip-loading-text">加载中...</span>
-        </div>
-      ) : (
-        // 实际内容 - 瀑布流显示
-        <>
-          <div className="trip-waterfall-container">
-            <div className="trip-waterfall-column">
-              {columns[0].map(item => (
-                <WaterfallCard key={item.id} item={item} />
-              ))}
-            </div>
-            <div className="trip-waterfall-column">
-              {columns[1].map(item => (
-                <WaterfallCard key={item.id} item={item} />
-              ))}
-            </div>
+    <PullRefresh
+      value={refreshing}
+      onRefresh={handleRefresh}
+      successText="刷新成功"
+      pullingText="下拉刷新"
+      loosingText="释放刷新"
+      loadingText="刷新中..."
+    >
+      <div className="trip-recommend-section" ref={containerRef}>
+        {images.length === 0 && loading && !refreshing ? (
+          // 初次加载中状态
+          <div className="trip-loading-container">
+            <div className="trip-loading-spinner"></div>
+            <span className="trip-loading-text">加载中...</span>
           </div>
-
-          {/* 无限滚动加载更多区域 */}
-          {hasMore && (
-            <div ref={loaderRef} className="trip-load-more">
-              {loading ? (
-                <div className="trip-loading-indicator">
-                  <div className="trip-loading-spinner"></div>
-                  <span className="trip-loading-text">加载更多精彩内容...</span>
-                </div>
-              ) : (
-                <div className="trip-load-more-trigger">
-                  <span className="trip-trigger-text">图片.img</span>
-                </div>
-              )}
+        ) : (
+          // 实际内容 - 瀑布流显示
+          <>
+            <div className="trip-waterfall-container">
+              <div className="trip-waterfall-column">
+                {columns[0].map(item => (
+                  <WaterfallCard key={item.id} item={item} />
+                ))}
+              </div>
+              <div className="trip-waterfall-column">
+                {columns[1].map(item => (
+                  <WaterfallCard key={item.id} item={item} />
+                ))}
+              </div>
             </div>
-          )}
 
-          {/* 没有更多内容时的提示 */}
-          {!hasMore && images.length > 0 && (
-            <div className="trip-no-more-content">
-              <span className="trip-no-more-text">已经到底了~</span>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+            {/* 无限滚动加载更多区域 */}
+            {hasMore && (
+              <div ref={loaderRef} className="trip-load-more">
+                {loading ? (
+                  <div className="trip-loading-indicator">
+                    <div className="trip-loading-spinner"></div>
+                    <span className="trip-loading-text">加载更多精彩内容...</span>
+                  </div>
+                ) : (
+                  <div className="trip-load-more-trigger">
+                    <span className="trip-trigger-text">图片.img</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 没有更多内容时的提示 */}
+            {!hasMore && images.length > 0 && (
+              <div className="trip-no-more-content">
+                <span className="trip-no-more-text">已经到底了~</span>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </PullRefresh>
   );
 };
 

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import { CustomToast } from './components/CustomToast'
 import './App.css'
 
 // 直接导入（暂时禁用懒加载）
@@ -16,7 +17,8 @@ import Search from './pages/Search'
 
 function App() {
   return (
-    <Router>
+    <>
+      <Router>
       <Routes>
           {/* 公开路由 */}
           <Route path="/login" element={<Login />} />
@@ -44,7 +46,9 @@ function App() {
           {/* 404 页面 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-    </Router>
+      </Router>
+      <CustomToast />
+    </>
   )
 }
 

@@ -12,7 +12,7 @@ const placeholderImage3 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWl
 const mockPosts = [
   {
     id: '1',
-    content: '今天天气真好，出去散步看到了美丽的晚霞。夕阳西下，整个天空都被染成了橙红色，真是太美了！',
+    content: '今天的夕阳真美！在海边散步，感受着海风的吹拂，心情格外舒畅。生活中的美好瞬间值得被记录。',
     images: [
       placeholderImage,
       placeholderImage2
@@ -20,14 +20,14 @@ const mockPosts = [
     author: '小明',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=xiaoming',
     userId: 'user_1',
-    createTime: new Date(Date.now() - 3600000).toISOString(),
+    createTime: new Date(Date.now() - 3600000).toISOString(), // 1小时前
     tags: ['晚霞', '风景', '生活'],
     views: 128,
     likes: 23,
     comments: 5
   },
   {
-    id: '2', 
+    id: '2',
     content: '分享一道今天做的美食 - 红烧排骨！色香味俱全，家人都说很好吃。附上详细食谱，感兴趣的朋友可以试试。',
     images: [
       placeholderImage2,
@@ -37,7 +37,7 @@ const mockPosts = [
     author: '美食达人',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=foodie',
     userId: 'user_2',
-    createTime: new Date(Date.now() - 7200000).toISOString(),
+    createTime: new Date(Date.now() - 7200000).toISOString(), // 2小时前
     tags: ['美食', '烹饪', '排骨'],
     views: 256,
     likes: 45,
@@ -52,11 +52,50 @@ const mockPosts = [
     author: '户外爱好者',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=outdoor',
     userId: 'current_user_id', // 当前用户的文章，可以编辑删除
-    createTime: new Date(Date.now() - 86400000).toISOString(),
+    createTime: new Date(Date.now() - 86400000).toISOString(), // 1天前
     tags: ['爬山', '户外', '运动'],
     views: 89,
     likes: 15,
     comments: 3
+  },
+  {
+    id: '4',
+    content: '刚刚发布！实时测试时间排序功能。这是最新的一条内容。',
+    images: [],
+    author: '测试用户',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=tester',
+    userId: 'user_3',
+    createTime: new Date(Date.now() - 300000).toISOString(), // 5分钟前
+    tags: ['测试', '最新'],
+    views: 5,
+    likes: 1,
+    comments: 0
+  },
+  {
+    id: '5',
+    content: '昨天的精彩瞬间回顾，感谢大家的支持！',
+    images: [placeholderImage],
+    author: '分享者',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sharer',
+    userId: 'user_4',
+    createTime: new Date(Date.now() - 172800000).toISOString(), // 2天前
+    tags: ['回顾', '感谢'],
+    views: 156,
+    likes: 28,
+    comments: 8
+  },
+  {
+    id: '6',
+    content: '一周前的旅行记录，现在看来依然很美好。',
+    images: [placeholderImage2, placeholderImage3],
+    author: '旅行者',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=traveler',
+    userId: 'user_5',
+    createTime: new Date(Date.now() - 604800000).toISOString(), // 7天前
+    tags: ['旅行', '回忆'],
+    views: 234,
+    likes: 67,
+    comments: 15
   }
 ]
 
@@ -87,13 +126,26 @@ export const getPostList = async (params = {}) => {
   if (isDev) {
     await new Promise(resolve => setTimeout(resolve, 300))
     
-    const { page = 1, pageSize = 10 } = params
+    const { page = 1, pageSize = 10, sortBy = 'time' } = params
+    
+    // 复制数组以避免修改原始数据
+    let sortedPosts = [...mockPosts]
+    
+    // 按照发布时间排序（最新的在前）
+    if (sortBy === 'time') {
+      sortedPosts.sort((a, b) => {
+        const timeA = new Date(a.createTime).getTime()
+        const timeB = new Date(b.createTime).getTime()
+        return timeB - timeA // 降序，最新的在前
+      })
+    }
+    
     const start = (page - 1) * pageSize
     const end = start + pageSize
     
     return {
-      list: mockPosts.slice(start, end),
-      total: mockPosts.length,
+      list: sortedPosts.slice(start, end),
+      total: sortedPosts.length,
       page,
       pageSize
     }
@@ -292,11 +344,11 @@ const mockComments = [
   {
     id: 'c1',
     postId: '1',
-    content: '很棒的分享！',
+    content: '很棒的分享！风景真的太美了，请问这是在哪里拍的？',
     author: '路人甲',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user1',
-    createTime: new Date(Date.now() - 1800000).toISOString(),
-    likes: 5
+    createTime: new Date(Date.now() - 1800000).toISOString(), // 30分钟前
+    likes: 15
   },
   {
     id: 'c2',
@@ -304,8 +356,62 @@ const mockComments = [
     content: '太美了，我也想去看看',
     author: '小花',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user2',
-    createTime: new Date(Date.now() - 3600000).toISOString(),
-    likes: 3
+    createTime: new Date(Date.now() - 3600000).toISOString(), // 1小时前
+    likes: 8
+  },
+  {
+    id: 'c3',
+    postId: '1',
+    content: '夕阳无限好，只是近黄昏',
+    author: '诗意人生',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user3',
+    createTime: new Date(Date.now() - 7200000).toISOString(), // 2小时前
+    likes: 12
+  },
+  {
+    id: 'c4',
+    postId: '2',
+    content: '看起来好好吃！能分享一下食谱吗？',
+    author: '吃货一枚',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user4',
+    createTime: new Date(Date.now() - 600000).toISOString(), // 10分钟前
+    likes: 25
+  },
+  {
+    id: 'c5',
+    postId: '2',
+    content: '红烧排骨是我的最爱！学习了',
+    author: '美食爱好者',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user5',
+    createTime: new Date(Date.now() - 1200000).toISOString(), // 20分钟前
+    likes: 10
+  },
+  {
+    id: 'c6',
+    postId: '3',
+    content: '爬山真的很累但很值得！加油💪',
+    author: '运动达人',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user6',
+    createTime: new Date(Date.now() - 900000).toISOString(), // 15分钟前
+    likes: 6
+  },
+  {
+    id: 'c7',
+    postId: '1',
+    content: '摄影技术真不错，构图很棒！',
+    author: '摄影师小王',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=user7',
+    createTime: new Date(Date.now() - 300000).toISOString(), // 5分钟前
+    likes: 20
+  },
+  {
+    id: 'c8',
+    postId: '1',
+    content: '这种景色让人心情舒畅',
+    author: '当前用户',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=current',
+    createTime: new Date(Date.now() - 60000).toISOString(), // 1分钟前
+    likes: 2
   }
 ]
 
@@ -314,6 +420,14 @@ export const getComments = async (postId) => {
   if (isDev) {
     await new Promise(resolve => setTimeout(resolve, 300))
     const comments = mockComments.filter(c => c.postId === postId)
+    
+    // 按发布时间排序（最新的在前）
+    comments.sort((a, b) => {
+      const timeA = new Date(a.createTime).getTime()
+      const timeB = new Date(b.createTime).getTime()
+      return timeB - timeA
+    })
+    
     return {
       list: comments,
       total: comments.length
@@ -393,6 +507,14 @@ export const getUserPosts = async (userId = 'current_user_id') => {
     await new Promise(resolve => setTimeout(resolve, 300))
     
     const userPosts = mockPosts.filter(p => p.userId === userId)
+    
+    // 按发布时间排序（最新的在前）
+    userPosts.sort((a, b) => {
+      const timeA = new Date(a.createTime).getTime()
+      const timeB = new Date(b.createTime).getTime()
+      return timeB - timeA
+    })
+    
     return {
       list: userPosts,
       total: userPosts.length
@@ -412,6 +534,14 @@ export const getUserCollectedPosts = async () => {
     
     const collectedIds = getCollectedPosts()
     const collectedPosts = mockPosts.filter(p => collectedIds.includes(p.id))
+    
+    // 按发布时间排序（最新的在前）
+    collectedPosts.sort((a, b) => {
+      const timeA = new Date(a.createTime).getTime()
+      const timeB = new Date(b.createTime).getTime()
+      return timeB - timeA
+    })
+    
     return {
       list: collectedPosts,
       total: collectedPosts.length
